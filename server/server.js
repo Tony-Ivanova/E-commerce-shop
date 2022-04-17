@@ -1,10 +1,14 @@
 import express from 'express'
 import products from './data/Products.js'
+import dotenv from 'dotenv'
+import connectDatabase from './config/mongoDb.js'
 
-
-
-
+dotenv.config()
+connectDatabase()
 const app = express()
+
+const PORT = process.env.PORT || 1000;
+
 
 app.get('/api/products', (req, res) => {
     res.json(products)
@@ -21,4 +25,4 @@ app.get('/', (req, res) => {
 
 
 
-app.listen(5000, console.log("Server running on port 5000"))
+app.listen(PORT, console.log(`Server running on port ${PORT}`))

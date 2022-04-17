@@ -16,7 +16,7 @@ const SingleProduct = ({ match }) => {
 
     fetchProduct()
 
-  }, [])
+  }, [match])
   return (
     <>
       <Header />
