@@ -1,4 +1,4 @@
-import mongoose from { mongoose }
+import mongoose from 'mongoose'
 
 const productSchema = mongoose.Schema({
     name: {
@@ -44,4 +44,7 @@ const productSchema = mongoose.Schema({
         timestamps: true
     })
 
-module.exports = mongoose.module('User', userSchema)
+
+const Product = mongoose.model('Product', productSchema);
+
+export default Product
