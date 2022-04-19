@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./../components/Header";
 import Rating from "../components/homeComponents/Rating";
 import { Link } from "react-router-dom";
@@ -7,7 +7,8 @@ import { listProductDetails } from "../redux/actions/product";
 import Message from "./../components/LoadingError/Error";
 import Loading from '../components/LoadingError/Loading'
 
-const SingleProduct = ({ match }) => {
+const SingleProduct = ({ history, match }) => {
+  const [qty, setQty] = useState(1)
   const productId = match.params.id;
   const dispatch = useDispatch()
 
@@ -17,6 +18,12 @@ const SingleProduct = ({ match }) => {
   useEffect(() => {
     dispatch(listProductDetails(productId))
   }, [dispatch, productId])
+
+  const AddToCartHandle = (e) => {
+    e.preventDefault()
+
+    history.push(`/cart/${productId}?qty=${qty}`)
+  }
 
   return (
     <>
@@ -78,7 +85,7 @@ const SingleProduct = ({ match }) => {
                                   ))}
                                 </select>
                               </div>
-                              <button className="round-black-btn">Add To Cart</button>
+                              <button onClick={AddToCartHandle} className="round-black-btn">Add To Cart</button>
                             </>
                           ) : null}
                         </div>
