@@ -1,6 +1,6 @@
 import express from 'express'
 import asyncHandler from 'express-async-handler'
-import protect from '../middlewares/auth.js';
+import { protect } from '../middlewares/auth.js';
 import User from '../models/user.js';
 import generateToken from '../utils/generateToken.js';
 
@@ -32,14 +32,14 @@ router.post('/', protect, asyncHandler(
         const { email, password } = req.body
         const userExists = await User.findOne({ email })
 
-        if(userExists){
+        if (userExists) {
             res.status(400)
             throw new Error("User already exists")
         }
 
-        const user = await User.create({name, email, password})
+        const user = await User.create({ name, email, password })
 
-        if(user){
+        if (user) {
             res.status(201).json({
                 _id: user._id,
                 name: user.name,
@@ -48,7 +48,7 @@ router.post('/', protect, asyncHandler(
                 token: generateToken(user._id),
             })
         }
-        else{
+        else {
             res.status(400)
             throw new Error("Invalid user data")
         }
