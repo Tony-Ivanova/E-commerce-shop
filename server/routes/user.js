@@ -27,9 +27,9 @@ router.post('/login', asyncHandler(
     })
 )
 
-router.post('/', protect, asyncHandler(
+router.post('/', asyncHandler(
     async (req, res) => {
-        const { email, password } = req.body
+        const { name, email, password } = req.body
         const userExists = await User.findOne({ email })
 
         if (userExists) {
