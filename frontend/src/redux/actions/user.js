@@ -1,4 +1,4 @@
-import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS } from "../constants/user"
+import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT } from "../constants/user"
 import axios from 'axios'
 
 export const login = (email, password) => async (dispatch) => {
@@ -22,4 +22,11 @@ export const login = (email, password) => async (dispatch) => {
 
         })
     }
+}
+
+
+export const logout = () => (dispatch) => {
+    localStorage.removeItem('userInfo')
+    dispatch({type: USER_LOGOUT})
+    document.location.href = '/login'
 }
