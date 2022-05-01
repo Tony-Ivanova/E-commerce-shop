@@ -4,6 +4,7 @@ import connectDatabase from './config/mongoDb.js'
 import ImportData from './DataImport.js'
 import productRouter from './routes/products.js'
 import userRouter from './routes/user.js'
+import orderRouter from './routes/order.js'
 import { errorHandler, notFound } from './middlewares/errors.js'
 
 dotenv.config()
@@ -17,6 +18,7 @@ const PORT = process.env.PORT || 1000;
 app.use('/api/import', ImportData)
 app.use('/api/products', productRouter)
 app.use('/api/users', userRouter)
+app.use('/api/orders', orderRouter)
 app.use(notFound)
 app.use(errorHandler)
 
