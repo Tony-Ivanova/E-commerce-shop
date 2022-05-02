@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Header from "./../components/Header";
 import Message from "../components/LoadingError/Error";
+import { ORDER_CREATE_RESET } from "../redux/constants/order";
+import { createOrder } from "../redux/actions/order";
 
-const PlaceOrderScreen = () => {
+const PlaceOrderScreen = ({ history }) => {
   window.scrollTo(0, 0);
 
   const dispatch = useDispatch()
@@ -13,7 +15,7 @@ const PlaceOrderScreen = () => {
   const { userInfo } = userLogin
 
   const addDecimals = (num) => {
-    return (Math.round(num * 100)/ 100).toFixed(2)
+    return (Math.round(num * 100) / 100).toFixed(2)
   }
 
   cart.itemsPrice = addDecimals(
@@ -21,15 +23,36 @@ const PlaceOrderScreen = () => {
   )
 
   cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 10 : 100)
-  cart.taxPrice = addDecimals(Number((0.15*cart.itemsPrice).toFixed(2)))
+  cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)))
   cart.totalPrice = (
     Number(cart.itemsPrice) +
     Number(cart.shippingPrice) +
-    Number(cart.taxPrice) 
+    Number(cart.taxPrice)
   ).toFixed(2)
 
+
+  const orderCreate = useSelector((state) => state.orderCreate)
+  const { order, success, error } = orderCreate
+
+  useEffect(() => {
+    if (success) {
+      history.push(`/order/${order._id}`)
+      dispatch({ type: ORDER_CREATE_RESET })
+    }
+  }, [history, dispatch, success, order])
+
   const placeOrderHandler = (e) => {
-    e.preventDefault();
+    dispatch(
+      createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
+      })
+    )
   };
 
   return (
@@ -159,13 +182,18 @@ const PlaceOrderScreen = () => {
             {
               cart.cartItems.length === 0 ? null : (
                 <button type="submit" onClick={placeOrderHandler}>
-                    PLACE ORDER
+                  PLACE ORDER
                 </button>
               )
             }
-            {/* <div className="my-3 col-12">
-                <Message variant="alert-danger">{error}</Message>
-              </div> */}
+
+            {
+              error && (
+                <div className="my-3 col-12">
+                  <Message variant="alert-danger">{error}</Message>
+                </div>
+              )
+            }
           </div>
         </div>
       </div>
