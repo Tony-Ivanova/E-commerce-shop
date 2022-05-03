@@ -15,6 +15,7 @@ import {
     USER_UPDATE_PROFILE_FAIL,
 } from "../constants/user"
 import axios from 'axios'
+import { ORDER_LIST_MY_RESET } from "../constants/order"
 
 export const login = (email, password) => async (dispatch) => {
     try {
@@ -132,6 +133,7 @@ export const logout = () => (dispatch) => {
     localStorage.removeItem('userInfo')
     dispatch({ type: USER_LOGOUT })
     dispatch({ type: USER_DETAILS_RESET })
+    dispatch({ type: ORDER_LIST_MY_RESET})
     document.location.href = '/login'
 }
 
