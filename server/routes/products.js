@@ -1,9 +1,14 @@
 import express from 'express'
 import asyncHandler from 'express-async-handler'
 import Product from '../models/product.js';
-import { protect } from '../middlewares/auth.js';
+import { admin, protect } from '../middlewares/auth.js';
 
 const router = express.Router();
+
+router.get('/all', protect, admin, asyncHandler(async (req, res) => {
+    const products = await Product.find({}).sort({_id: -1})
+    res.json(products)
+}))
 
 router.get('/', asyncHandler(
     async (req, res) => {
@@ -34,7 +39,6 @@ router.get('/:id', asyncHandler(
         }
     })
 )
-
 
 router.post('/:id/review', protect, asyncHandler(
     async (req, res) => {
@@ -70,5 +74,7 @@ router.post('/:id/review', protect, asyncHandler(
         }
     })
 )
+
+
 
 export default router
