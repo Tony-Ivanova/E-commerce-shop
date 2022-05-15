@@ -6,7 +6,7 @@ import { admin, protect } from '../middlewares/auth.js';
 const router = express.Router();
 
 router.get('/all', protect, admin, asyncHandler(async (req, res) => {
-    const products = await Product.find({}).sort({_id: -1})
+    const products = await Product.find({}).sort({ _id: -1 })
     res.json(products)
 }))
 
@@ -75,6 +75,18 @@ router.post('/:id/review', protect, asyncHandler(
     })
 )
 
+router.delete('/:id', protect, admin, asyncHandler(
+    async (req, res) => {
+        const product = await Product.findById(req.params.id)
+        if (product) {
+            await product.remove()
+            res.json({ message: "Product deleted" })
+        } else {
+            res.status(404)
+            throw new Error('Product not found')
+        }
+    })
+)
 
 
 export default router

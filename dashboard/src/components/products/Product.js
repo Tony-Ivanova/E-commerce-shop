@@ -1,9 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deleteProduct } from "../../redux/actions/product";
 
 const Product = (props) => {
   const { product } = props;
+  const dispatch = useDispatch()
 
+  const deletehandler = (id) => {
+    if (window.confirm("Äre you sure you want to delete it?")) {
+      dispatch(deleteProduct(id))
+    }
+  }
   return (
     <>
       <div className="col-md-6 col-sm-6 col-lg-3 mb-5">
@@ -25,6 +33,7 @@ const Product = (props) => {
               </Link>
               <Link
                 to="#"
+                onClick={() => deletehandler(product._id)}
                 className="btn btn-sm btn-outline-danger p-2 pb-3 col-md-6"
               >
                 <i className="fas fa-trash-alt"></i>
