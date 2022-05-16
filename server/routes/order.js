@@ -1,9 +1,17 @@
 import express from 'express'
 import asyncHandler from 'express-async-handler'
-import { protect } from '../middlewares/auth.js';
+import { admin, protect } from '../middlewares/auth.js';
 import Order from "../models/order.js"
 
 const router = express.Router();
+
+
+router.get('/all', protect, admin, asyncHandler(
+    async (req, res) => {
+        const orders = await Order.find({ }).sort({ _id: -1 }).populate("user", "id name email")
+        res.json(orders)
+    })
+)
 
 router.post('/', protect, asyncHandler(
     async (req, res) => {
@@ -38,6 +46,7 @@ router.post('/', protect, asyncHandler(
         }
     })
 )
+
 
 router.get('/:id', protect, asyncHandler(
     async (req, res) => {
@@ -77,6 +86,7 @@ router.put('/:id/pay', protect, asyncHandler(
         }
     })
 )
+
 
 router.get('/', protect, asyncHandler(
     async (req, res) => {
