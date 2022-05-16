@@ -12,6 +12,7 @@ const Product = (props) => {
       dispatch(deleteProduct(id))
     }
   }
+  
   return (
     <>
       <div className="col-md-6 col-sm-6 col-lg-3 mb-5">

@@ -17,7 +17,7 @@ const MainProducts = () => {
 
   useEffect(() => {
     dispatch(listProducts())
-  }, [dispatch, successDelete])
+  }, [successDelete, dispatch])
 
 
   return (

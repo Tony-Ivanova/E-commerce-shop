@@ -5,28 +5,27 @@ import { admin, protect } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.get('/all', protect, admin, asyncHandler(async (req, res) => {
-    const products = await Product.find({}).sort({ _id: -1 })
-    res.json(products)
-}))
-
 router.get('/', asyncHandler(
     async (req, res) => {
-        const pageSize = 2
+        const pageSize = 4
         const page = Number(req.query.pageNumber) || 1
-        const keyword = req.query.keyword
-            ? {
-                name: {
-                    $regex: req.query.keyword,
-                    $options: "i"
-                },
-            }
-            : {}
+        const keyword = req.query.keyword ? {
+            name: {
+                $regex: req.query.keyword,
+                $options: "i"
+            },
+        } : {}
+
         const count = await Product.countDocuments({ ...keyword })
         const products = await Product.find({ ...keyword }).limit(pageSize).skip(pageSize * (page - 1)).sort({ _id: -1 })
         res.json({ products, page, pages: Math.ceil(count / pageSize) })
     })
 )
+
+router.get('/all', protect, admin, asyncHandler(async (req, res) => {
+    const products = await Product.find({}).sort({ _id: -1 })
+    res.json(products)
+}))
 
 router.get('/:id', asyncHandler(
     async (req, res) => {
@@ -88,5 +87,50 @@ router.delete('/:id', protect, admin, asyncHandler(
     })
 )
 
+router.post('/', protect, admin, asyncHandler(
+    async (req, res) => {
+        const { name, price, description, image, countInStock } = req.body
+        const productExist = await Product.findOne({ name })
+        if (productExist) {
+            res.status(400)
+            throw new Error('Product name already exists')
+        } else {
+            const product = new Product({
+                name: name + ' ', price, description, image, countInStock,
+                user: req.user._id
+            })
+            if (product) {
+                const createdProduct = await product.save()
+                res.status(201).json(createdProduct)
+            } else {
+                res.status(400)
+                throw new Error("Invalid product data")
+            }
+        }
+    })
+)
+
+router.put('/:id', protect, admin, asyncHandler(
+    async (req, res) => {
+        const { name, price, description, image, countInStock } = req.body
+        const product = await Product.findById(req.params.id)
+
+        if (product) {
+            product.name = name || product.name
+            product.price = price || product.price
+            product.description = description || product.description
+            product.image = image || product.image
+            product.countInStock = countInStock || product.countInStock
+
+            const updateProduct = await product.save()
+            res.json(updateProduct)
+        } else {
+            res.status(404)
+            throw new Error("Product not found")
+        }
+    }
+)
+
+)
 
 export default router
