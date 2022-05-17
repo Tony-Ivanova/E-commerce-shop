@@ -44,7 +44,7 @@ const Orders = (props) => {
                 }
 
               </td>
-              <td>{moment(order.createAt).format("MMM Do YY")}</td>
+              <td>{moment(order.createdAt).format("MMM Do YY")}</td>
               <td>
                 {
                   order.isDelivered ? (

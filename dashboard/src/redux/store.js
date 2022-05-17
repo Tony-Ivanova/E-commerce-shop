@@ -3,7 +3,7 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { userListReducer, userLoginReducer } from './reducers/user'
 import { productCreateReducer, productDeleteReducer, productEditReducer, productsListReducer, productUpdateReducer } from './reducers/product'
-import { orderListReducer } from './reducers/order'
+import { orderDetailsReducer, orderListReducer } from './reducers/order'
 
 const reducer = combineReducers({
     userLogin: userLoginReducer,
@@ -14,6 +14,7 @@ const reducer = combineReducers({
     productEdit: productEditReducer,
     productUpdate: productUpdateReducer,
     orderList: orderListReducer,
+    orderDetails: orderDetailsReducer,
 })
 
 const userInfoFromLocalStorage = localStorage.getItem('userInfo')

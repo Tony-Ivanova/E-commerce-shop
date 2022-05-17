@@ -47,7 +47,6 @@ router.post('/', protect, asyncHandler(
     })
 )
 
-
 router.get('/:id', protect, asyncHandler(
     async (req, res) => {
         const order = await Order.findById(req.params.id).populate(

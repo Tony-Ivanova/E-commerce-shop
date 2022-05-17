@@ -9,7 +9,7 @@ const OrderScreen = () => {
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <OrderMain />
+        <OrderMain/>
       </main>
     </>
   );
