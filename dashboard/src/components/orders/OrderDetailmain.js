@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import OrderDetailProducts from "./OrderDetailProducts";
 import OrderDetailInfo from "./OrderDetailInfo";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
-import { getOrderDetails } from "../../redux/actions/order";
+import { deliverOrder, getOrderDetails } from "../../redux/actions/order";
 import Loading from '../../components/LoadingError/Loading'
 import Message from '../../components/LoadingError/Error'
 import moment from 'moment'
@@ -15,9 +15,17 @@ const OrderDetailmain = (props) => {
   const orderDetails = useSelector((state) => state.orderDetails)
   const { loading, error, order } = orderDetails
 
+  const orderDelivered = useSelector((state) => state.orderDelivered)
+  const { loading: loadingDelivered, success: successDelivered } = orderDelivered
+
   useEffect(() => {
     dispatch(getOrderDetails(orderId))
-  }, [dispatch, orderId])
+  }, [dispatch, orderId, successDelivered])
+
+
+  const deliveredHandler = () => {
+    dispatch(deliverOrder(order))
+  }
 
   return (
     <section className="content-main">
@@ -62,20 +70,33 @@ const OrderDetailmain = (props) => {
               </header>
               <div className="card-body">
                 {/* Order info */}
-                <OrderDetailInfo order={order}/>
+                <OrderDetailInfo order={order} />
 
                 <div className="row">
                   <div className="col-lg-9">
                     <div className="table-responsive">
-                      <OrderDetailProducts order={order} loading={loading}/>
+                      <OrderDetailProducts order={order} loading={loading} />
                     </div>
                   </div>
                   {/* Payment Info */}
                   <div className="col-lg-3">
                     <div className="box shadow-sm bg-light">
-                      <button className="btn btn-dark col-12">
-                        MARK AS DELIVERED
-                      </button>
+                      {
+                        order.isDelivered ? (
+                          <button className="btn btn-success col-12">
+                            DELIVERED AT ({" "} {moment(order.isDeliveredAt).format("MMM Do YYY")})
+                          </button>
+                        ) : (
+                          <>
+                            {
+                              loadingDelivered && <Loading />
+                            }
+                            <button onClick={deliveredHandler} className="btn btn-dark col-12">
+                              MARK AS DELIVERED
+                            </button>
+                          </>
+                        )
+                      }
                     </div>
                   </div>
                 </div>

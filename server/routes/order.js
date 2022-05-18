@@ -86,6 +86,22 @@ router.put('/:id/pay', protect, asyncHandler(
     })
 )
 
+router.put('/:id/delivered', protect, asyncHandler(
+    async (req, res) => {
+        const order = await Order.findById(req.params.id)
+
+        if (order) {
+            order.isDelivered = true
+            order.deliveredAt = Date.now()
+           
+            const updatedOrder = await order.save()
+            res.json(updatedOrder)
+        } else {
+            res.status(404)
+            throw new Error("Order Not Found")
+        }
+    })
+)
 
 router.get('/', protect, asyncHandler(
     async (req, res) => {
@@ -93,5 +109,6 @@ router.get('/', protect, asyncHandler(
         res.json(order)
     })
 )
+
 
 export default router

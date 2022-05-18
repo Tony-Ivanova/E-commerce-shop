@@ -15,6 +15,7 @@ const reducer = combineReducers({
     productUpdate: productUpdateReducer,
     orderList: orderListReducer,
     orderDetails: orderDetailsReducer,
+    orderDelivered: orderDetailsReducer,
 })
 
 const userInfoFromLocalStorage = localStorage.getItem('userInfo')
